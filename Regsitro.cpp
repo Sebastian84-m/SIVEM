@@ -1,82 +1,51 @@
-#include <stdio.h>      // Librería para entrada y salida estándar como printf, scanf.
-#include <string.h>     // Librería para funciones de manejo de cadenas
-#define MAX_REVISIONES 3   // Constante que define el número máximo de revisiones técnicas
+#include <stdio.h>      // LibrerÃ­a para entrada y salida estÃ¡ndar como printf, scanf.
+#include <string.h>     // LibrerÃ­a para funciones de manejo de cadenas
+#define MAX_REVISIONES 3   // Constante que define el nÃºmero mÃ¡ximo de revisiones tÃ©cnicas
 
-// La función principal del programa
+// La funciÃ³n principal del programa
 int main (){
-	// Variables para almacenar los datos del vehículo
+	// Variables para almacenar los datos del vehÃ­culo
 	char placa [20];
 	char marca [20];
 	int modelo ;
 	float valorVehiculo;
-	float pagoMatricula;   // Monto que se pagará por matrícula
+	float pagoMatricula;   // Monto que se pagarÃ¡ por matrÃ­cula
 	
 	int total = 0;  // Contador de revisiones realizadas
 	
-	// Arreglo para almacenar hasta MAX_REVISIONES revisiones técnicas
+	// Arreglo para almacenar hasta MAX_REVISIONES revisiones tÃ©cnicas
 	RevisionTecnica revisiones[MAX_REVISIONES];
 	
-	// Registro de datos del vehículo del usuario
-	printf("===== Registro del Vehículo =====\n");
+	// Registro de datos del vehÃ­culo del usuario
+	printf("===== Registro del VehÃ­culo =====\n");
 	printf("Ingrese la placa: ");
 	scanf("%s", placa);
 	
 	printf("Ingrese la marca: ");
 	scanf("%s", marca);
 	
-	printf("Ingrese el modelo (año): ");
+	printf("Ingrese el modelo (aÃ±o): ");
 	scanf("%d", &modelo);
 	
-	printf("Ingrese el valor del vehículo: ");
+	printf("Ingrese el valor del vehÃ­culo: ");
 	scanf("%f", &valorVehiculo);
 	
-	// Cálculo del pago de matrícula con el 1.5% del valor del vehículo
+	// CÃ¡lculo del pago de matrÃ­cula con el 1.5% del valor del vehÃ­culo
 	pagoMatricula = valorVehiculo * 0.015;
 	
-	// Muestra los datos ingresados y el resultado del cálculo
-	printf("\n=== Datos del Vehículo ===\n");
+	// Muestra los datos ingresados y el resultado del cÃ¡lculo
+	printf("\n=== Datos del VehÃ­culo ===\n");
 	printf("Placa: %s\n", placa);
 	printf("Marca: %s\n", marca);
 	printf("Modelo: %d\n", modelo);
-	printf("Valor del vehículo: %.2f\n", valorVehiculo);
-	printf("Pago de matrícula: %.2f\n", pagoMatricula);
+	printf("Valor del vehÃ­culo: %.2f\n", valorVehiculo);
+	printf("Pago de matrÃ­cula: %.2f\n", pagoMatricula);
 	
-	// Llamada a la función para registrar una revisión técnica
+	// Llamada a la funciÃ³n para registrar una revisiÃ³n tÃ©cnica
 	registrarRevision(revisiones, &total);
 	
 	return 0;  // Fin del programa
 }
 	
-	// Estructura para representar una revisión técnica
-	typedef struct {
-		char placa[10];       // Placa del vehículo
-		char fecha[11];       // Fecha de la revisión (formato YYYY-MM-DD)
-		char resultado[15];   // Resultado de la revisión ("Aprobado" o "No aprobado")
-	} RevisionTecnica;
 	
-	// Función para registrar una revisión técnica
-	void registrarRevision (RevisionTecnica revisiones[], int *total ){
-		// Verifica si ya se alcanzó el número máximo de revisiones
-		if (*total >= MAX_REVISIONES) {
-			printf("No se puede registrar mas revisiones");
-			return;
-		}
-		
-		// Solicita los datos de la revisión técnica
-		printf("Ingrese la placa del vehiculo: ");
-		scanf("%s", revisiones[*total].placa);
-		
-		printf("Ingrese la fecha (YYYY-MM-DD): ");
-		scanf("%s", revisiones[*total].fecha);
-		
-		printf("Ingrese el resultado (Aprobado / No aprobado): ");
-		scanf("%s", revisiones[*total].resultado);
-		
-		// Incrementa el contador de revisiones
-		(*total)++;
-		
-		// Muestra confirmación
-		printf("Revision registrada con exito \n");
-		printf("Cantidad de revisiones realizadas: %d\n", *total);
-	}
-		
+	
