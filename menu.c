@@ -4,6 +4,8 @@
 #include "matricula.h"
 #include "revision.h"
 
+//declaramos la funcion mostrarMenu
+
 void mostrarMenu() {
 	printf("\n=== SISTEMA SIVEM ===\n");
 	printf("1. Registrar vehiculo\n");
@@ -14,8 +16,10 @@ void mostrarMenu() {
 	printf("Seleccione opcion: ");
 }
 
-void procesarOpcion(int opcion) {
-	switch(opcion) {
+//Declaramos la funcion procesarOpcion
+
+void procesarOpcion(int opcion) {    //recibe una opcion numérica
+	switch(opcion) { //evaluar el valor de la opcion
 	case 1:
 		limpiarPantalla();
 		registrarVehiculo();
