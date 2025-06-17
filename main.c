@@ -12,7 +12,12 @@ int main() {
 	//creamos el bucle de la funcion mostrarMenu
 	do {
 		mostrarMenu();
-		scanf("%d", &opcion);
+		
+		if(scanf("%d", &opcion) != 1) {  //Verifica si el usuario ingresó un número. Si no, muestra un error.
+			printf("Entrada invalida. Debe colocar una de las 4 opciones.\n");
+			while(getchar() != '\n');  // Limpia la parte mal escrita.
+			continue;
+		}
 		procesarOpcion(opcion); //Ejecuta una acción según la opción seleccionada por el usuario.
 		
 	} while(opcion != 5);
