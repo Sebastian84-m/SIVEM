@@ -1,17 +1,78 @@
 #include <stdio.h>
 #include <string.h>
-#include "registro.h"
-#define MAX 100
 #include <stdlib.h>
 #include <time.h>
+#include "registro.h"
+
+#define MAX 100
 
 struct Vehiculo lista[MAX];
-int total = 0;
+int total = 0; // Un solo contador para vehículos registrados
+
+void limpiarPantalla() {
+#ifdef _WIN32
+	system("cls");
+#else
+	system("clear");
+#endif
+}
 
 void limpiarBuffer() {
 	int c;
 	while ((c = getchar()) != '\n' && c != EOF);
 }
+
+// Verifica que una cadena de 10 caracteres contenga solo números
+int esNumerica(const char* str) {
+	for (int i = 0; i < 10; i++) {
+		if (str[i] < '0' || str[i] > '9') return 0; // No es un dígito
+	}
+	return 1;
+}
+
+// Solicita al usuario una cédula válida si la ingresa mal anteriormente
+void pedirCedula(char cedula[]) {
+	int valido = 0;
+	while (!valido) {
+		printf("Ingrese cedula (10 digitos): ");
+		scanf("%10s", cedula); // Limitar a 10 caracteres
+		limpiarBuffer();
+		if (strlen(cedula) != 10 || !esNumerica(cedula)) {
+			limpiarPantalla();
+			printf("Error: la cedula debe tener exactamente 10 digitos numericos.\n");
+		} else {
+			valido = 1; // La cédula es válida
+		}
+	}
+}
+
+// Verifica si una placa tiene el formato que debe ser: ABC-1234
+int validarPlaca(const char placa[]) {
+	if (strlen(placa) != 8) return 0; // Debe tener exactamente 8 caracteres
+	
+	// Verifica que los primeros 3 sean letras mayúsculas
+	for (int i = 0; i < 3; i++) {
+		if (!(placa[i] >= 'A' && placa[i] <= 'Z')) return 0;
+	}
+	if (placa[3] != '-') return 0; // El cuarto carácter debe ser '-'
+	// Verifica que los últimos 4 dígitos sean números
+	for (int i = 4; i < 8; i++) {
+		if (!(placa[i] >= '0' && placa[i] <= '9')) return 0;
+	}
+	
+	return 1; // La placa es válida
+}
+
+// Se revisa si una placa ya fue registrada previamente
+int yaRegistrado(const char placa[]) {
+	for (int i = 0; i < total; i++) {
+		if (strcmp(lista[i].placa, placa) == 0) {
+			return 1; // Ya existe
+		}
+	}
+	return 0; // No existe
+}
+
 void mostrarFecha() {
 	time_t tiempo_actual;
 	struct tm *info_tiempo;
@@ -24,14 +85,6 @@ void mostrarFecha() {
 	printf("Fecha Actual: %s\n", fecha);
 }
 
-void limpiarPantalla() {
-#ifdef _WIN32
-	system("cls");
-#else
-	system("clear");
-#endif
-}
-
 void mostrarResumen(struct Vehiculo v) {
 	printf("Vehiculo registrado.\n");
 }
@@ -42,65 +95,146 @@ void registrarVehiculo() {
 	
 	mostrarFecha();
 	
-	// Pide la cÃ©dula, solo acepta 10 dÃ­gitos numÃ©ricos
-	do {
-		printf("Cedula (10 digitos): ");
-		scanf("%10s", v.cedula);
+	// Validar cédula
+	pedirCedula(v.cedula);
+	
+	limpiarPantalla();
+	
+	// Validar año
+	int anioValido = 0;
+	while (!anioValido) {
+		printf("Ingrese el anio del vehiculo (1990 - 2025): ");
+		if (scanf("%d", &v.anio) == 1 && v.anio >= 1990 && v.anio <= 2025) {
+			anioValido = 1;
+		} else {
+			printf("Anio invalido. Debe estar entre 1990 y 2025.\n");
+		}
 		limpiarBuffer();
-	} while (strlen(v.cedula) != 10 || strspn(v.cedula, "0123456789") != 10);
-	
-	printf("Placa (ABC1234): ");
-	fgets(v.placa, sizeof(v.placa), stdin); 
-	v.placa[strcspn(v.placa, "\n")] = '\0';
-	
-	printf ("Numero de revisiones tecnicas:");
-	scanf("%d", &v.revisiones);
-	if (v.revisiones<3 && v.revisiones>0){
-		limpiarPantalla();
-		printf("No puede matricular el vehiculo. Necesita pasar las tres revisiones tecnicas.");
-		return ;
-	} else if (v.revisiones>3 || v.revisiones<0){
-		limpiarPantalla();
-		printf ("Error. Intente nuevamente");
-		return ;
 	}
 	
-	printf("Valor del vehiculo: ");
-	scanf("%f", &v.avaluo);
-	limpiarBuffer();
+	limpiarPantalla();
 	
-	printf ("Modelo:");
+	// Validar placa
+	int placaValida = 0;
+	while (!placaValida) {
+		printf("Ingrese la placa (formato ABC-1234): ");
+		scanf("%8s", v.placa);
+		limpiarBuffer();
+		
+		if (!validarPlaca(v.placa)) {
+			printf("Error: formato de placa invalido.\n");
+		} else if (yaRegistrado(v.placa)) {
+			printf("Error: esta placa ya esta registrada.\n");
+		} else {
+			placaValida = 1;
+		}
+	}
+	
+	limpiarPantalla();
+	
+	// Validar revisiones técnicas
+	int revisionesValidas = 0;
+	while (!revisionesValidas) {
+		printf("Numero de revisiones tecnicas: ");
+		if (scanf("%d", &v.revisiones) == 1) {
+			if (v.revisiones == 3) {
+				revisionesValidas = 1;
+			} else if (v.revisiones > 3 || v.revisiones < 0) {
+				printf("Error. Intente nuevamente.\n");
+			} else {
+				printf("No puede matricular el vehiculo. Necesita pasar las tres revisiones tecnicas.\n");
+			}
+		} else {
+			printf("Ingrese un valor numérico valido.\n");
+		}
+		limpiarBuffer();
+	}
+	
+	// Validar avalúo
+	int avaluoValido = 0;
+	while (!avaluoValido) {
+		printf("Avaluo del vehiculo: $ ");
+		if (scanf("%f", &v.avaluo) == 1 && v.avaluo > 0) {
+			avaluoValido = 1;
+		} else {
+			printf("Valor invalido. Ingrese un numero positivo.\n");
+		}
+		limpiarBuffer();
+	}
+	
+	if (v.anio <= 2018) {
+		v.avaluo *= 0.8;
+	}
+	
+	// Validar modelo
+	printf("Modelo: ");
 	fgets(v.modelo, sizeof(v.modelo), stdin);
 	v.modelo[strcspn(v.modelo, "\n")] = '\0';
+	if (strlen(v.modelo) == 0) {
+		printf("Error: el modelo no puede estar vacio.\n");
+		return;
+	}
 	
-	printf("Tipo:\n 1.Vehiculo particular\n 2.Motocicletas\n 3.Transporte publico-comercial\n Seleccione: ");
+	// Validar tipo
+	int tipoValido = 0;
 	int t;
-	scanf("%d", &t);
-	limpiarBuffer();
+	while (!tipoValido) {
+		printf("Tipo:\n");
+		printf("1. Vehiculo particular\n");
+		printf("2. Motocicletas\n");
+		printf("3. Transporte publico-comercial\n");
+		printf("Seleccione (1-3): ");
+		if (scanf("%d", &t) == 1 && (t >= 1 && t <= 3)) {
+			tipoValido = 1;
+		} else {
+			printf("Opción invalida. Intente nuevamente.\n");
+		}
+		limpiarBuffer();
+	}
 	
-	if(t == 1) {
+	switch (t) {
+	case 1:
 		strcpy(v.tipo, "Vehiculo particular");
-		v.costo = v.avaluo * 0.015;
-	} 
-	else if(t == 2) {
+		v.costo = 18 + (v.avaluo * 0.015);
+		break;
+	case 2:
 		strcpy(v.tipo, "Motocicletas");
-		v.costo = v.avaluo * 0.018;
-	}
-	else {
+		v.costo = 9.30 + (v.avaluo * 0.018);
+		break;
+	case 3:
 		strcpy(v.tipo, "Transporte publico-comercial");
-		v.costo = v.avaluo * 0.012;
+		v.costo = 20.50 + (v.avaluo * 0.012);
+		break;
 	}
 	
-	printf("Tiene multas? (s/n): ");
+	// Validar multas
 	char m;
-	scanf(" %c", &m);
-	v.multas = (m == 's') ? 1 : 0;
-	if(v.multas) v.costo += 500;
+	int multaValida = 0;
+	while (!multaValida) {
+		printf("Tiene multas? (s/n): ");
+		scanf(" %c", &m);
+		limpiarBuffer();
+		if (m == 's' || m == 'S') {
+			v.multas = 1;
+			multaValida = 1;
+		} else if (m == 'n' || m == 'N') {
+			v.multas = 0;
+			multaValida = 1;
+		} else {
+			printf("Entrada invalida. Ingrese 's' o 'n'.\n");
+		}
+	}
 	
-	if(total < MAX) {
+	if (v.multas) {
+		v.costo += 500;
+	}
+	
+	if (total < MAX) {
 		lista[total] = v;
 		total++;
 	}
+	
 	limpiarPantalla();
 	mostrarResumen(v);
 }
+

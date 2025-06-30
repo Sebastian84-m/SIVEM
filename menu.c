@@ -18,7 +18,8 @@ void mostrarMenu() {
 
 //Declaramos la funcion procesarOpcion
 
-void procesarOpcion(int opcion) {    //recibe una opcion numérica
+
+void procesarOpcion(int opcion) {    //recibe una opcion num�rica
 	switch(opcion) { //evaluar el valor de la opcion
 	case 1:
 		limpiarPantalla();
@@ -34,6 +35,7 @@ void procesarOpcion(int opcion) {    //recibe una opcion numérica
 		break;
 	case 4:
 		limpiarPantalla();
+		listaVehiculos();
 		break;
 	case 5:
 		printf("\nSaliendo del programa.\n");

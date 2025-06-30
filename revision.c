@@ -31,3 +31,22 @@ void registrarRevision() {
 		printf("\nVehiculo con placa %s no encontrado.\n", placa);
 	}
 }
+void listaVehiculos(){
+	if (total == 0) {
+		printf("\nNo hay vehiculos registrados.\n");
+		return; // Sale de la función si la lista está vacía
+	}
+	
+	printf("\n===== Vehiculos Registrados =====\n");
+	for (int i = 0; i < total; i++) {  //Recorre todos los vehículos registrados para procesarlos uno a uno.
+		printf("Vehiculo: %d\n", i + 1);
+		printf("Cedula %s\n",lista[i].cedula);
+		printf("Placa: %s\n", lista[i].placa);
+		printf("Año: %d\n",lista[i].anio);
+		printf("Tipo: %s\n", lista[i].tipo);
+		printf("Revisiones Tecnicas: %d\n", lista[i].revisiones);
+		printf("Modelo: %s\n", lista[i].modelo);
+		printf("Avaluo: $%.2f\n", lista[i].avaluo);
+		printf("Costo matricula: $%.2f\n\n", lista[i].costo);
+	}
+}

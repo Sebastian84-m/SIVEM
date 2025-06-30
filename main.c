@@ -1,4 +1,4 @@
-#include <stdio.h>    // Incluye la librerÃ­a estÃ¡ndar de entrada/salida (para printf/scanf)
+#include <stdio.h>    // Incluye la librería estándar de entrada/salida (para printf/scanf)
 #include "menu.h"       
 #include "registro.h"    
 #include "matricula.h"   
@@ -13,15 +13,12 @@ int main() {
 	do {
 		mostrarMenu();
 		
-		if(scanf("%d", &opcion) != 1) {  //Verifica si el usuario ingresÃ³ un nÃºmero. Si no, muestra un error.
+		if(scanf("%d", &opcion) != 1) {  //Verifica si el usuario ingresó un número. Si no, muestra un error.
 			printf("Entrada invalida. Debe colocar una de las 4 opciones.\n");
 			while(getchar() != '\n');  // Limpia la parte mal escrita.
-			continue;
 		}
-		procesarOpcion(opcion); //Ejecuta una acciÃ³n segÃºn la opciÃ³n seleccionada por el usuario.
+		procesarOpcion(opcion); //Ejecuta una acción según la opción seleccionada por el usuario.
 		
 	} while(opcion != 5);
-	
-	
 	return 0;
 }

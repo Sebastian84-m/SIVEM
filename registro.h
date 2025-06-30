@@ -2,6 +2,8 @@
 #define REGISTRO_H
 
 struct Vehiculo {
+	char cedula[11];       //se ingresa la cédula de 10 dígitos
+	int anio;              //Año del vehiculo matriculado
 	char placa[10];        // Formato ABC1234 
 	char fecha[80];        // Fecha en la que se matricula
 	char tipo[50];         // Particular, motocicleta y transporte publico
