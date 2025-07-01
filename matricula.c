@@ -23,3 +23,5 @@ void calcularMatricula() {
 		printf("Costo matricula: $%.2f\n\n", lista[i].costo);
 	}
 }
+
+

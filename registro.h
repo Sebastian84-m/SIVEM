@@ -17,7 +17,19 @@ struct Vehiculo {
 // Función para registrar un nuevo vehículo
 void registrarVehiculo();
 
-// Función para mostrar resumen de un vehículo
-void mostrarResumen(struct Vehiculo v);
+//Funcion para mostrara el comprobante en pantalla 
+void mostrarComprobante(struct Vehiculo v);
+
+//Funcion para generar el comprobante de la matricula
+void generarComprobante(struct Vehiculo v);
+
+//Funcion para buscar el Vehiculo por placa
+void buscarVehiculoPorPlaca();
+
+//Funcion para guardar los datos en un archivo
+void guardarVehiculos();
+
+//Funcion para leer los datos del archivo
+void cargarVehiculos();
 
 #endif

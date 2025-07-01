@@ -30,6 +30,7 @@ int esNumerica(const char* str) {
 	return 1;
 }
 
+
 // Solicita al usuario una cédula válida si la ingresa mal anteriormente
 void pedirCedula(char cedula[]) {
 	int valido = 0;
@@ -154,10 +155,10 @@ void registrarVehiculo() {
 	int avaluoValido = 0;
 	while (!avaluoValido) {
 		printf("Avaluo del vehiculo: $ ");
-		if (scanf("%f", &v.avaluo) == 1 && v.avaluo > 0) {
+		if (scanf("%f", &v.avaluo) == 1 && v.avaluo > 0 && v.avaluo<500000) {
 			avaluoValido = 1;
 		} else {
-			printf("Valor invalido. Ingrese un numero positivo.\n");
+			printf("Valor invalido. Ingrese un avaluo entre 0 y 500.000.\n");
 		}
 		limpiarBuffer();
 	}
@@ -167,7 +168,7 @@ void registrarVehiculo() {
 	}
 	
 	// Validar modelo
-	printf("Modelo: ");
+	printf("Modelo( Ejemplo: Mazda RX8): ");
 	fgets(v.modelo, sizeof(v.modelo), stdin);
 	v.modelo[strcspn(v.modelo, "\n")] = '\0';
 	if (strlen(v.modelo) == 0) {
@@ -236,5 +237,128 @@ void registrarVehiculo() {
 	
 	limpiarPantalla();
 	mostrarResumen(v);
+	mostrarComprobante(lista[total - 1]);
+	generarComprobante(lista[total - 1]);
 }
+
+//Muestra el comprobante en pantalla 
+void mostrarComprobante(struct Vehiculo v) {
+	printf("----- COMPROBANTE DE MATRICULA -----\n");
+	printf("Placa: %s\n", v.placa);
+	printf("Tipo: %s\n", v.tipo);
+	printf("Modelo: %s\n", v.modelo);
+	printf("Año: %d\n", v.anio);
+	printf("Avalúo: $%.2f\n", v.avaluo);
+	printf("Valor a pagar: $%.2f\n", v.costo);
+	printf("-----------------------------------\n");
+}
+
+//Funcion para generar el comprobante en un archivo txt
+void generarComprobante(struct Vehiculo v) {
+	char respuesta;
+	printf("¿Desea generar el comprobante en archivo? (s/n): ");
+	scanf(" %c", &respuesta);
+	limpiarBuffer();
+	
+	if (respuesta != 's' && respuesta != 'S') {
+		printf("No se generó el comprobante.\n");
+		return;
+	}
+	
+	FILE *archivo = fopen("comprobante.txt", "w");
+	if (archivo == NULL) {
+		printf("No se pudo crear el comprobante.\n");
+		return;
+	}
+	
+	fprintf(archivo, "----- COMPROBANTE DE MATRICULA -----\n");
+	fprintf(archivo, "Placa: %s\n", v.placa);
+	fprintf(archivo, "Tipo: %s\n", v.tipo);
+	fprintf(archivo, "Modelo: %s\n", v.modelo);
+	fprintf(archivo, "Año: %d\n", v.anio);
+	fprintf(archivo, "Valor a pagar: %.2f\n", v.avaluo);
+	fprintf(archivo, "Valor a pagar: %.2f\n", v.costo);
+	fprintf(archivo, "-----------------------------------\n");
+	
+	fclose(archivo);
+	printf("Comprobante generado correctamente.\n");
+}
+
+//Se busca el vehiculo por placa
+void buscarVehiculoPorPlaca() {
+	char placa[10];
+	int encontrado = 0;
+	
+	printf("\n--- Buscar Vehiculo por Placa ---\n");
+	printf("Ingrese la placa (formato ABC-1234): ");
+	scanf("%9s", placa);
+	limpiarBuffer();
+	
+	for (int i = 0; i < total; i++) {
+		if (strcmp(lista[i].placa, placa) == 0) {
+			printf("\nVehiculo encontrado:\n");
+			mostrarComprobante(lista[i]);
+			encontrado = 1;
+			break;
+		}
+	}
+	
+	if (!encontrado) {
+		printf("Vehiculo con placa %s no encontrado.\n", placa);
+	}
+}
+
+//Guarda los datos registrados en un archivo txt
+void guardarVehiculos() {
+	FILE *archivo = fopen("vehiculos.txt", "w");
+	if (archivo == NULL) {
+		printf("Error al guardar en archivo.\n");
+		return;
+	}
+	
+	for (int i = 0; i < total; i++) {
+		fprintf(archivo, "%s,%s,%s,%s,%d,%d,%.2f,%.2f,%d\n",
+				lista[i].cedula,
+				lista[i].placa,
+				lista[i].modelo,
+				lista[i].tipo,
+				lista[i].anio,
+				lista[i].revisiones,
+				lista[i].avaluo,
+				lista[i].costo,
+				lista[i].multas);
+	}
+	
+	fclose(archivo);
+	printf("Vehículos guardados en vehiculos.txt\n");
+}
+
+//Funcion para leer las datos del arhivo 
+void cargarVehiculos() {
+	FILE *archivo = fopen("vehiculos.txt", "r");
+	if (archivo == NULL) {
+		total = 0;  // Archivo no existe todavía
+		return;
+	}
+	
+	total = 0;
+	while (fscanf(archivo, "%10[^,],%8[^,],%29[^,],%29[^,],%d,%d,%f,%f,%d\n",
+				  lista[total].cedula,
+				  lista[total].placa,
+				  lista[total].modelo,
+				  lista[total].tipo,
+				  &lista[total].anio,
+				  &lista[total].revisiones,
+				  &lista[total].avaluo,
+				  &lista[total].costo,
+				  &lista[total].multas) == 9) {
+		total++;
+		if (total >= MAX) break;
+	}
+	
+	fclose(archivo);
+	printf("Vehículos cargados desde vehiculos.txt\n");
+}
+
+
 

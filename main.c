@@ -5,10 +5,13 @@
 #include "revision.h"    
 
 //declaramos las funciones
+void guardarVehiculos();
+void cargarVehiculos();
 
 int main() {
 	int opcion;
-	
+	//Se cargan los datos al inicio 
+	cargarVehiculos();
 	//creamos el bucle de la funcion mostrarMenu
 	do {
 		mostrarMenu();
@@ -19,6 +22,9 @@ int main() {
 		}
 		procesarOpcion(opcion); //Ejecuta una acción según la opción seleccionada por el usuario.
 		
+		if (opcion == 1) {  // Solo guardamos si registramos un nuevo vehículo
+			guardarVehiculos();
+		}
 	} while(opcion != 5);
 	return 0;
 }

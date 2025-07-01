@@ -31,7 +31,7 @@ void procesarOpcion(int opcion) {    //recibe una opcion numérica
 		break;
 	case 3:
 		limpiarPantalla();
-		registrarRevision();
+		buscarVehiculoPorPlaca();
 		break;
 	case 4:
 		limpiarPantalla();
