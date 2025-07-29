@@ -29,9 +29,9 @@ Para poder compilar el programa es necesario incluir las librerías junto con la
 - registro.h
 - revision.h
 # Integrantes
-Danny Lanchimba
-Sebastian Llugsa
-Jonathan Pincay
+| Danny Lanchimba |
+Sebastian Llugsa |
+Jonathan Pincay |
 ### Interfaz del registro de vehículos
 ![Registro de vehículos](registro_vehiculos.png)
 ### Vehiculos registrados
